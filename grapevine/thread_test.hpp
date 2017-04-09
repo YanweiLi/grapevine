@@ -38,7 +38,7 @@ void test_thread()
     work_thread.start(func , 10);
     work_thread.wait_for(200);
     work_thread.stop();
-    int result = work_thread.getResult();
+    int result = work_thread.get_result();
     printf("resutl = %d" , result);
 }
 

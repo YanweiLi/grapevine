@@ -130,7 +130,7 @@ namespace cpp0x
             return true;
         }
         
-        ReturnType getResult()
+        ReturnType get_result()
         {
             return future_.get();
         }
