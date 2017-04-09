@@ -9,14 +9,6 @@
 #include <iostream>
 #include "thread_test.hpp"
 
-// 线程函数测试
-void test_thread()
-{
-    ClassThreadTest test;
-    test.thread_start();
-    test.thread_stop();
-}
-
 ////////////////////////////////////////////////
 
 int main(int argc, const char * argv[]) {

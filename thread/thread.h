@@ -78,7 +78,7 @@ namespace cpp0x
             {
                 exit_flag_ = true;
                 thread_.join();
-                future_.get();
+                //future_.get();
                 return true;
             }
             
@@ -93,7 +93,7 @@ namespace cpp0x
                 exit_flag_ = true;
                 queue.uninit();
                 thread_.join();
-                future_.get();
+                //future_.get();
                 return true;
             }
             
@@ -128,6 +128,11 @@ namespace cpp0x
             
             // 程序结束，返回等待成功
             return true;
+        }
+        
+        ReturnType getResult()
+        {
+            return future_.get();
         }
         
     private:
