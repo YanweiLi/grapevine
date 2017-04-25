@@ -8,8 +8,8 @@
 
 #ifndef CPP_0X_THREAD_H_
 #define CPP_0X_THREAD_H_
-#include "noncopyable.h"
-#include "queue.h"
+#include "utility/noncopyable.h"
+#include "queue/queue.h"
 #include <thread>
 #include <future>
 

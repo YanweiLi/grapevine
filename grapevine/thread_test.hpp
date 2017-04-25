@@ -8,12 +8,29 @@
 
 #ifndef ThreadTest_hpp
 #define ThreadTest_hpp
-#include "thread.h"
+#include "thread/thread.h"
+
+class ThreadReturnValue
+{
+public:
+    int result_;
+};
+
+bool operator == (ThreadReturnValue const& l , ThreadReturnValue const& r)
+{
+    return l.result_ == r.result_;
+}
+
+class ThreadInputValue
+{
+public:
+    int input_;
+};
 
 class ClassThreadTest
 {
 public:
-    int thread_func(int n , bool const& exit)
+    ThreadReturnValue thread_func(ThreadInputValue const& input , bool const& exit)
     {
         printf("thread start 1 ... \n");
         
@@ -22,9 +39,11 @@ public:
         }
         
         printf("thread stop 3 ... \n");
-        return n*20;
+        
+        ThreadReturnValue ret;
+        ret.result_ = input.input_*10;
+        return ret;
     }
-    
 };
 
 
@@ -32,15 +51,24 @@ public:
 void test_thread()
 {
     ClassThreadTest test;
-    typedef cpp0x::thread_0x<int, int> WorkThread;
+    typedef cpp0x::thread_0x<ThreadReturnValue, ThreadInputValue> WorkThread;
     WorkThread work_thread;
-    WorkThread::Functor1 func = std::bind(&ClassThreadTest::thread_func, &test , std::placeholders::_1 , std::placeholders::_2);
-    work_thread.start(func , 10);
+    WorkThread::Functor1 func = std::bind(&ClassThreadTest::thread_func
+                                          , &test
+                                          , std::placeholders::_1
+                                          , std::placeholders::_2);
+    
+    ThreadInputValue input;
+    input.input_ = 10;
+    work_thread.start(func , input);
     work_thread.wait_for(200);
     work_thread.stop();
-    int result = work_thread.get_result();
-    printf("resutl = %d" , result);
+    ThreadReturnValue result = work_thread.get_result();
+    printf("resutl = %d" , result.result_);
 }
+
+
+/////////////////////////////////////////////////////////////////////////////////////
 
 
 

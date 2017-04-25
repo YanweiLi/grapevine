@@ -28,4 +28,7 @@ typedef char                        tchar;
 typedef tchar*                      lptchar;
 typedef std::basic_string<tchar>    tString;
 
+
+//
+
 #endif /* CPP_0X_STRING_STRING_DEF_H_ */

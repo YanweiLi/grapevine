@@ -28,7 +28,7 @@ public:
     RunLoop()
     {
         queue_.init();
-        guid_ = CGUID::new_string();
+        guid_ = CGUID::create_uuid();
     }
     
     ~RunLoop()

@@ -139,13 +139,32 @@ namespace cpp0x
             QUEUE_DATA_LOCKER(lock);
             
             size_t before = size();
-            list_.erase(std::remove(list_.begin()
-                                    , list_.end()
-                                    , d)
-                        , list_.end());
+            if (before > 0) {
+                list_.erase(std::remove(list_.begin()
+                                        , list_.end()
+                                        , d)
+                            , list_.end());
+            }
             
             return before - size();
         }
+        
+        template <class Functor>
+        size_t delete_allof(Functor pred)
+        {
+            QUEUE_DATA_LOCKER(lock);
+            
+            size_t before = size();
+            if (before > 0) {
+                list_.erase(std::remove_if(list_.begin()
+                                           , list_.end()
+                                           , pred));
+                
+            }
+            
+            return before - size();
+        }
+        
         
         bool exist(T& e)
         {
