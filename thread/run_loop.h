@@ -18,7 +18,7 @@ namespace cpp0x {
     //
     // 同步需要添加一些信息
     //
-    typedef std::function<void(void)> LoopTaskType;
+    typedef std::function<void(bool const& stoped)> LoopTaskType;
     
     class RunLoopSyncInfo
     {
@@ -136,7 +136,7 @@ namespace cpp0x {
                     LoopTaskType const& loop_task = p->get_task();
                     if(loop_task)
                     {
-                        loop_task();
+                        loop_task(stoped);
                     }
                     
                     p->wake_up();
@@ -185,8 +185,16 @@ namespace cpp0x {
         bool destroy_dispatch_loop(tString const& loop_id)
         {
             auto size = run_loop_objs_.size();
-            auto it = run_loop_objs_.erase(loop_id);
-            return size == it + 1;
+            auto it = run_loop_objs_.find(loop_id);
+            if (it != run_loop_objs_.end()) {
+                RunLoopSPtr ptr = it->second;
+                if (ptr->stop())
+                {
+                    run_loop_objs_.erase(loop_id);
+                }
+            }
+            
+            return size == run_loop_objs_.size() + 1;
         }
         
         bool push(tString const& loop_id , LoopTaskType const& loop_obj , bool is_sync)

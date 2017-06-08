@@ -34,7 +34,7 @@ namespace cpp0x
         {
 #ifdef DEBUG
             bool stoped = stop();
-            printf("delete obj = %p : stoped ? %s" , this , stoped ? "yes" : "no");
+            printf("delete obj = %p : stoped ? %s\n" , this , stoped ? "yes" : "no");
 #else
             stop();
 #endif
@@ -78,11 +78,9 @@ namespace cpp0x
             {
                 exit_flag_ = true;
                 thread_.join();
-                //future_.get();
-                return true;
             }
             
-            return false;
+            return is_running();
         }
         
         template<class T>
@@ -93,11 +91,9 @@ namespace cpp0x
                 exit_flag_ = true;
                 queue.uninit();
                 thread_.join();
-                //future_.get();
-                return true;
             }
             
-            return false;
+            return is_running();
         }
         
     public:
