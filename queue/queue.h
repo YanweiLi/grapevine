@@ -158,7 +158,8 @@ namespace cpp0x
             if (before > 0) {
                 list_.erase(std::remove_if(list_.begin()
                                            , list_.end()
-                                           , pred));
+                                           , pred)
+                            , list_.end());
                 
             }
             
