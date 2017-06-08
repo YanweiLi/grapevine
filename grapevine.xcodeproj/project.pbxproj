@@ -32,6 +32,8 @@
 		CD95A9D41E9A7A6400ED4BA9 /* thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = thread.h; sourceTree = "<group>"; };
 		CD95A9D61E9A7A6400ED4BA9 /* queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = queue.h; sourceTree = "<group>"; };
 		CD9DD49B1EE9007E008A6D02 /* queue_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = queue_test.hpp; sourceTree = "<group>"; };
+		CD9DD49C1EE909CB008A6D02 /* singleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = singleton.h; sourceTree = "<group>"; };
+		CD9DD49D1EE90B8B008A6D02 /* runloop_test.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = runloop_test.hpp; sourceTree = "<group>"; };
 		CDE4B1E31E9F2A5E00351207 /* guid.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = guid.h; sourceTree = "<group>"; };
 		CDE4B1E41E9F2A6700351207 /* guid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guid.cpp; sourceTree = "<group>"; };
 		CDF7654D1E9A83E6002429B6 /* thread_test.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = thread_test.hpp; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 				CD95A9C61E9A7A4300ED4BA9 /* main.cpp */,
 				CDF7654D1E9A83E6002429B6 /* thread_test.hpp */,
 				CD9DD49B1EE9007E008A6D02 /* queue_test.hpp */,
+				CD9DD49D1EE90B8B008A6D02 /* runloop_test.hpp */,
 			);
 			path = grapevine;
 			sourceTree = "<group>";
@@ -80,6 +83,7 @@
 		CD95A9CD1E9A7A6400ED4BA9 /* utility */ = {
 			isa = PBXGroup;
 			children = (
+				CD9DD49C1EE909CB008A6D02 /* singleton.h */,
 				CDE4B1E41E9F2A6700351207 /* guid.cpp */,
 				CDE4B1E31E9F2A5E00351207 /* guid.h */,
 				CD95A9D01E9A7A6400ED4BA9 /* noncopyable.h */,

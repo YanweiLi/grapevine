@@ -7,8 +7,10 @@
 //
 
 #include <iostream>
-#include "thread_test.hpp"
-#include "queue_test.hpp"
+#include "grapevine/thread_test.hpp"
+#include "grapevine/queue_test.hpp"
+#include "grapevine/runloop_test.hpp"
+
 
 ////////////////////////////////////////////////
 
@@ -19,8 +21,13 @@ int main(int argc, const char * argv[]) {
     //test_thread();
     
     // queue
-    std::cout << "test queue\n";
-    test_queue();
+    //std::cout << "test queue\n";
+    //test_queue();
+    
+    // runloop
+    std::cout << "test runloop\n";
+    test_runloop();
+
         
     char x;
     std::cin >> x;

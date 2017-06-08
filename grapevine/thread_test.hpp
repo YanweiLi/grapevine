@@ -44,6 +44,21 @@ public:
         ret.result_ = input.input_*10;
         return ret;
     }
+    
+    ThreadReturnValue thread_func0(bool const& exit)
+    {
+        printf("thread start 1 ... \n");
+        
+        while (!exit) {
+            printf("thread running 2... \n");
+        }
+        
+        printf("thread stop 3 ... \n");
+        
+        ThreadReturnValue ret;
+        ret.result_ = 10;
+        return ret;
+    }
 };
 
 
@@ -53,14 +68,19 @@ void test_thread()
     ClassThreadTest test;
     typedef cpp0x::thread_0x<ThreadReturnValue, ThreadInputValue> WorkThread;
     WorkThread work_thread;
-    WorkThread::Functor1 func = std::bind(&ClassThreadTest::thread_func
+    WorkThread::Functor1 func1 = std::bind(&ClassThreadTest::thread_func
                                           , &test
                                           , std::placeholders::_1
                                           , std::placeholders::_2);
     
+    
+    WorkThread::Functor0 func0 = std::bind(&ClassThreadTest::thread_func0
+                                          , &test
+                                          , std::placeholders::_1);
+    
     ThreadInputValue input;
     input.input_ = 10;
-    work_thread.start(func , input);
+    work_thread.start(func1 , input);
     work_thread.wait_for(200);
     work_thread.stop();
     ThreadReturnValue result = work_thread.get_result();

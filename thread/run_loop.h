@@ -18,154 +18,164 @@
  */
 
 #include <functional>
-#include "utility/common/guid.h"
+#include <map>
 
-typedef std::function<void(void)> LoopTaskType;
+#include "utility/guid.h"
+#include "queue/queue.h"
+#include "thread/thread.h"
+#include "utility/singleton.h"
+#include "utility/string_def.h"
 
-class RunLoop
-{
-public:
-    RunLoop()
-    {
-        queue_.init();
-        guid_ = CGUID::create_uuid();
-    }
+namespace cpp0x {
     
-    ~RunLoop()
-    {
-        thread_.stop();
-        queue_.uninit();
-    }
+    typedef cpp0x::thread_0x<void, void*> CppWorker;
+    typedef std::function<void(void)> LoopTaskType;
     
-public:
-    bool start()
+    class RunLoop
     {
-        boost::function<void()> f
-        = boost::bind(&RunLoop::thread_func, this);
-        return thread_.start(f);
-    }
-    
-    bool stop()
-    {
-        return thread_.stop();
-    }
-    
-    void push(LoopTaskType const& param)
-    {
-        queue_.push(param);
-    }
-    
-    tString get_id()
-    {
-        return guid_;
-    }
-    
-private:
-    void thread_func()
-    {
-        while(true)
+    public:
+        RunLoop()
         {
-            interrupt_point();
-            LoopTaskType p = queue_.pop();
-            if (p)
+            queue_.init();
+            guid_ = CGUID::create_uuid();
+        }
+        
+        ~RunLoop()
+        {
+            thread_.stop();
+            queue_.uninit();
+        }
+        
+    public:
+        bool start()
+        {
+            CppWorker::Functor0 f = std::bind(&RunLoop::thread_func
+                                              , this
+                                              , std::placeholders::_1);
+            return thread_.start(f);
+            
+        }
+        
+        bool stop()
+        {
+            return thread_.stop();
+        }
+        
+        void push(LoopTaskType const& param)
+        {
+            queue_.push(param);
+        }
+        
+        tString get_id()
+        {
+            return guid_;
+        }
+        
+    private:
+        void thread_func(bool const& stoped)
+        {
+            while(!stoped)
             {
-                p();
+                LoopTaskType p = queue_.pop();
+                if (p)
+                {
+                    p();
+                }
             }
         }
-    }
-    
-private:
-    OTask thread_;
-    BlockQueue<LoopTaskType> queue_;
-    tString guid_;
-};
-
-//////////////////////////////////////////////////////////////////////////////////////////
-// 工程类 : 构建一个
-
-class RunLoopManager : public Singleton<RunLoopManager>
-{
-    DECLARE_SINGLETON_CLASS(RunLoopManager);
-    
-    typedef boost::shared_ptr<RunLoop>          RunLoopSPtr;
-    typedef std::map<tString , RunLoopSPtr>     RunLoopObjs;
-    
-public:
-    tString create_dispatch_loop()
-    {
-        RunLoopSPtr obj(new RunLoop);
-        tString loop_id = obj->get_id();
-        run_loop_objs_.insert(std::make_pair(loop_id, obj));
         
-        obj->start();
-        return loop_id;
-    }
+    private:
+        CppWorker thread_;
+        cpp0x::queue<LoopTaskType> queue_;
+        tString guid_;
+    };
     
-    bool destroy_dispatch_loop(tString const& loop_id)
-    {
-        auto size = run_loop_objs_.size();
-        auto it = run_loop_objs_.erase(loop_id);
-        return size == it + 1;
-    }
+    //////////////////////////////////////////////////////////////////////////////////////////
+    // 工程类 : 构建一个
     
-    bool push_async(tString const& loop_id , LoopTaskType const& loop_obj)
+    class RunLoopManager : public Singleton<RunLoopManager>
     {
-        auto it = run_loop_objs_.find(loop_id);
-        if(it != run_loop_objs_.end())
+        DECLARE_SINGLETON_CLASS(RunLoopManager);
+        
+        typedef std::shared_ptr<RunLoop>          RunLoopSPtr;
+        typedef std::map<tString , RunLoopSPtr>   RunLoopObjs;
+        
+    public:
+        tString create_dispatch_loop()
         {
-            RunLoopSPtr tmp = it->second;
-            if(tmp)
+            RunLoopSPtr obj = std::make_shared<RunLoop>();
+            tString loop_id = obj->get_id();
+            run_loop_objs_.insert(std::make_pair(loop_id, obj));
+            
+            obj->start();
+            return loop_id;
+        }
+        
+        bool destroy_dispatch_loop(tString const& loop_id)
+        {
+            auto size = run_loop_objs_.size();
+            auto it = run_loop_objs_.erase(loop_id);
+            return size == it + 1;
+        }
+        
+        bool push_async(tString const& loop_id , LoopTaskType const& loop_obj)
+        {
+            auto it = run_loop_objs_.find(loop_id);
+            if(it != run_loop_objs_.end())
             {
-                tmp->push(loop_obj);
+                RunLoopSPtr tmp = it->second;
+                if(tmp)
+                {
+                    tmp->push(loop_obj);
+                }
+                
+                return true;
             }
             
-            return true;
+            return false;
         }
         
-        return false;
-    }
-    
-    bool push_sync(tString const& loop_id , LoopTaskType const& loop_obj)
-    {
-        auto it = run_loop_objs_.find(loop_id);
-        if(it != run_loop_objs_.end())
+        bool push_sync(tString const& loop_id , LoopTaskType const& loop_obj)
         {
-            RunLoopSPtr tmp = it->second;
-            if(tmp)
+            auto it = run_loop_objs_.find(loop_id);
+            if(it != run_loop_objs_.end())
             {
-                tmp->push(loop_obj);
+                RunLoopSPtr tmp = it->second;
+                if(tmp)
+                {
+                    tmp->push(loop_obj);
+                }
+                
+                return true;
             }
             
-            return true;
+            return false;
         }
         
-        return false;
+    private:
+        RunLoopObjs run_loop_objs_;
+    };
+    
+    //////////////////////////////////////////////////////////////////////////////////////////
+    
+    inline tString CREATE_RUN_LOOP()
+    {
+        return RunLoopManager::instance().create_dispatch_loop();
     }
     
-private:
-    RunLoopObjs run_loop_objs_;
-};
-
-//////////////////////////////////////////////////////////////////////////////////////////
-
-inline tString CREATE_RUN_LOOP()
-{
-    return RunLoopManager::instance().create_dispatch_loop();
+    inline bool DESTROY_RUN_LOOP(tString const& t)
+    {
+        return RunLoopManager::instance().destroy_dispatch_loop(t);
+    }
+    
+    inline bool RUN_LOOP_DISPATCH_ASYNC(tString const& t , LoopTaskType const& o)
+    {
+        return RunLoopManager::instance().push_async(t , o);
+    }
+    
+    inline bool RUN_LOOP_DISPATCH(tString const& t , LoopTaskType const& o)
+    {
+        return RunLoopManager::instance().push_sync(t , o);
+    }
 }
-
-inline bool DESTROY_RUN_LOOP(tString const& t)
-{
-    return RunLoopManager::instance().destroy_dispatch_loop(t);
-}
-
-inline bool RUN_LOOP_DISPATCH_ASYNC(tString const& t , LoopTaskType const& o)
-{
-    return RunLoopManager::instance().push_async(t , o);
-}
-
-inline bool RUN_LOOP_DISPATCH(tString const& t , LoopTaskType const& o)
-{
-    return RunLoopManager::instance().push_sync(t , o);
-}
-
 #endif /* CPP_0X_THREAD_RUN_LOOP_H_ */
