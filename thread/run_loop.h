@@ -163,7 +163,7 @@ namespace cpp0x {
     public:
         tString create_dispatch_loop()
         {
-            RunLoopSPtr obj(new RunLoop);
+            RunLoopSPtr obj = std::make_shared<RunLoop>();
             tString loop_id = obj->get_id();
             run_loop_objs_.insert(std::make_pair(loop_id, obj));
             
@@ -173,7 +173,7 @@ namespace cpp0x {
         bool create_dispatch_loop(tString const& loop_id)
         {
             if (run_loop_objs_.find(loop_id) != run_loop_objs_.end()) {
-                RunLoopSPtr obj(new RunLoop(loop_id));
+                RunLoopSPtr obj = std::make_shared<RunLoop>(loop_id);
                 run_loop_objs_.insert(std::make_pair(loop_id, obj));
                 obj->start();
                 return true;
@@ -197,7 +197,7 @@ namespace cpp0x {
                 RunLoopSPtr tmp = it->second;
                 if(tmp)
                 {
-                    RunLoopSyncInfoPtr task(new RunLoopSyncInfo(loop_obj , is_sync));
+                    RunLoopSyncInfoPtr task = std::make_shared<RunLoopSyncInfo>(loop_obj , is_sync);
                     tmp->push(task);
                     task->wait_here();
                 }
