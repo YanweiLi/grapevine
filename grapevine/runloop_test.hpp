@@ -13,13 +13,16 @@
 void test_runloop()
 {
     tString loop1 = cpp0x::CREATE_RUN_LOOP();
-    cpp0x::RUN_LOOP_DISPATCH_ASYNC(loop1 , []{
+    cpp0x::ASYNC_RUN_LOOP_DISPATCH(loop1 , []{
         printf("heheh \n");
     });
     
-    cpp0x::RUN_LOOP_DISPATCH(loop1 , [] {
+    cpp0x::SYNC_RUN_LOOP_DISPATCH(loop1 , [] {
         printf("sss \n");
     });
+    
+    
+    THREAD_SLEEP(1000*2);
     
     cpp0x::DESTROY_RUN_LOOP(loop1);
 }

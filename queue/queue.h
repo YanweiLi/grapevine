@@ -12,13 +12,10 @@
 #include <mutex>
 #include <condition_variable>
 
-//////////////////////////////////////////////////////////////////////////
-#define QUEUE_DATA_LOCKER(lock)                                          \
-std::unique_lock<std::mutex> lock (mutex_)
-//////////////////////////////////////////////////////////////////////////
-
 namespace cpp0x
 {
+#define QUEUE_DATA_LOCKER(lock) std::unique_lock<std::mutex> lock (mutex_)
+    
     template <class T>
     class queue
     {
