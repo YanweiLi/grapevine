@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <uuid/uuid.h>
-#include "utility/string_def.h"
+#include "utility/common/grapevine_define.h"
 namespace CGUID
 {
     tString create_uuid();

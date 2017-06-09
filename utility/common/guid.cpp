@@ -1,4 +1,5 @@
-#include "utility/guid.h"
+#include "utility/common/guid.h"
+
 namespace CGUID
 {
     tString create_uuid()

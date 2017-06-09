@@ -55,5 +55,7 @@ std::mutex Singleton<T>::mutex_;
 
 //Class that will implement the singleton mode,
 //must use the macro in it's delare file
-#define DECLARE_SINGLETON_CLASS( type ) friend class Singleton< type >
+#define DECLARE_SINGLETON_CLASS( type ) \
+friend class Singleton< type >;         \
+friend std::unique_ptr<type> std::make_unique< type >()
 #endif // SRC_UTILITY_COMMON_SINGLETON_H_

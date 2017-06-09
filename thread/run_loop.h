@@ -10,9 +10,9 @@
 #define SRC_UTILITY_THREAD_RUN_LOOP_H_
 #include <map>
 #include "queue/queue.h"
-#include "thread/thread.h"
-#include "utility/guid.h"
-#include "utility/singleton.h"
+#include "thread/run_loop.h"
+#include "utility/common/guid.h"
+#include "utility/common/singleton.h"
 
 namespace cpp0x {
     //

@@ -10,7 +10,7 @@
 #include "grapevine/thread_test.hpp"
 #include "grapevine/queue_test.hpp"
 #include "grapevine/runloop_test.hpp"
-
+#include "grapevine/msg_bus_test.h"
 
 ////////////////////////////////////////////////
 
@@ -25,10 +25,14 @@ int main(int argc, const char * argv[]) {
     //test_queue();
     
     // runloop
-    std::cout << "test runloop\n";
-    test_runloop();
+    //std::cout << "test runloop\n";
+    //test_runloop();
 
-        
+    // msgbus
+    std::cout << "test msgbus\n";
+    test_msgbus_1();
+    
+    
     char x;
     std::cin >> x;
     return 0;
